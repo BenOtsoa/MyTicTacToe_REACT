@@ -1,0 +1,13 @@
+.board-row {
+  display: flex;
+  justify-content: center;
+}
+
+.status {
+  color: rgb(243, 243, 243);
+}
+.winner {
+  padding: 1rem;
+  font-size: 2rem;
+  color: tomato;
+}
