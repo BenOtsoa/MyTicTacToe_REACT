@@ -34,8 +34,7 @@ class Board extends Component {
     );
   }
   componentDidUpdate() {
-    // console.log("componentDidUpdate");
-    //Créations de conditions pour lancer l'actualisation du composant
+    //conditions for running save()
     let countX = this.state.value.filter(elt => elt === "X").length;
     let countO = this.state.value.filter(elt => elt === "O").length;
     if (
@@ -44,20 +43,29 @@ class Board extends Component {
     ) {
       this.save();
     }
-    // console.log(countX);
-    // console.log(this.state.gameplayOne.length);
+
+    //conditions for running compare()
     if (this.state.winner === "") {
       this.compare();
     }
   }
 
+  //who's playing true player One, false player Two
+  counter() {
+    this.state.count === true
+      ? this.setState({ count: false })
+      : this.setState({ count: true });
+  }
+
+  //creating and setting a gameplay save array for each player which is filled on each turn
   save() {
     let copy = [...this.state.value];
-    // console.log(copy);
-
     let gameplayOne = [];
     let gameplayTwo = [];
+
+    //condition to push in the right array
     if (this.state.count === false) {
+      //filling the array with the index, which mean the position, of the square chosen by the player
       copy.map((elt, index) => {
         return elt === "X" ? gameplayOne.push(index) : null;
       });
@@ -68,17 +76,18 @@ class Board extends Component {
       });
       this.setState({ gameplayTwo });
     }
-
-    // console.log(gameplayOne, gameplayTwo);
   }
 
+  // Comparing the game of each player with the winning combinations
   compare() {
     let result1 = this.state.gameplayOne;
     let result2 = this.state.gameplayTwo;
     let win = [...this.state.win];
-    // console.log("log result1: ", result1, " et result2: ", result2);
+
+    // Setting arrays which will be filled by true or false since a winning combination is detected in the player's game.
     let tabTrueFalse1 = [];
     let tabTrueFalse2 = [];
+    // winningLine may help to know which winning combination is on the set and then have an action on it. To think.
     let winningLine = [];
 
     if (this.state.gameplayOne.length >= 3) {
@@ -92,12 +101,13 @@ class Board extends Component {
       );
     }
 
+    //Launching youWon()
     tabTrueFalse1.includes(true) ? this.youWon(1) : null;
     tabTrueFalse2.includes(true) ? this.youWon(2) : null;
   }
-  youWon(number) {
-    console.log(number);
 
+  //Alerting which player has won
+  youWon(number) {
     if (number === 1 || number === 2) {
       let winner = "";
       number === 1
@@ -110,14 +120,9 @@ class Board extends Component {
       this.setState({ winner });
     }
   }
-  counter() {
-    this.state.count === true
-      ? this.setState({ count: false })
-      : this.setState({ count: true });
-  }
 
+  //Filling the board with an X for playerOne and a O for playerTwo
   updateValue(xORy) {
-    // console.log("titi");
     const tab = this.state.value;
     const value = tab.map(elt => {
       if (elt === xORy && this.state.count) {
@@ -133,19 +138,15 @@ class Board extends Component {
 
   render() {
     let status = "";
-    if (this.props.joueurs !== undefined && this.props.joueurs.length === 2) {
+    if (this.props.joueurs.length === 2) {
       this.state.count === true
-        ? (status = "Next player:" + this.props.joueurs[1])
-        : (status = "Next player:" + this.props.joueurs[0]);
+        ? (status = "Next player: " + this.props.joueurs[1])
+        : (status = "Next player: " + this.props.joueurs[0]);
+    } else if (this.props.joueurs.length === 1) {
+      status = this.props.joueurs[0] + " is waiting for his opponent";
     } else {
       status = "Nobody has checked in yet";
     }
-    // let messVictoire = this.youWon();
-    // console.log(messVictoire);
-
-    // messVictoire === ""
-    //   ? (messVictoire = null)
-    //   : (messVictoire = this.youWon());
 
     return (
       <div>
